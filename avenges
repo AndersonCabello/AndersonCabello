@@ -1,0 +1,58 @@
+function  myFunction ( )  {
+    const  ss  =  SpreadsheetApp . getActiveSpreadsheet ( ) ;
+    var  C  =  "" ;
+    var  detalle  =  [ ] ;
+    var  datosAEnviar  =  [ ] ;
+  
+    ss . getRange ( "A2: D4" ) . getValues ( ) . paraCada ( v  =>  {
+      encabezado  =  v [ 0 ]
+    } )
+  
+    ss . getRange ( "A2: D4" ) . getValues ( ) . paraCada ( v  =>  {
+      if  ( v [ 0 ]  ==  encabezado )  {
+         datos  constantes =  {
+          pariente : v [ 1 ] ,
+          nombreM : v [ 2 ] ,
+          correo : v [ 3 ]
+        }
+        detalle . empujar ( datos ) ;
+      }
+    } )
+  
+     datos  constantes =  {
+      nombreA : encabezado ,
+      detalle : detalle
+    }
+  
+    datosAEnviar . empujar ( datos ) ;
+  
+    datosAEnviar . paraCada ( v  =>  {
+      v . detalle . paraCada ( i  =>  {
+  
+        const  idCopy  =  copySlide ( ) ;
+        const  getSlide  =  SlidesApp . openById ( idCopy ) ;
+  
+        getSlide . getSlides ( ) . paraCada ( v  =>  {
+          v . getShapes ( ) . paraCada ( f  =>  {
+            f . getText ( ) . replaceAllText ( '{{nombreMama}}' ,  i . nombreM )
+          } )
+        } )
+        getSlide . saveAndClose ( ) ;
+  
+  
+  
+  
+        /*MailApp.sendEmail (
+          i.correo,
+          "Estado del informe TPS",
+          `El correo te lo envia tu $ {i.pariente} $ {v.nombreA} para ti $ {i.nombreM}`); * /
+      } )
+    } )
+  
+  }
+  
+  
+  function  copySlide ( )  {
+    const  saveCopy  =  DriveApp . getFileById ( '1Z2d82OVLJdfGn7h0YifaNHjRGV2O37JOsMe5B8UXjjA' ) . makeCopy ( 'Copia Carta DDM' ,  DriveApp . getFolderById ( '1Bm81vsP - sMVyipqlAXtmQIsiFnecibb' ) ) ;
+    return  saveCopy . getId ( ) ;
+  }

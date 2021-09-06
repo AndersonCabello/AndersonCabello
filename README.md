@@ -1,16 +1,58 @@
-### Hi there 👋
-
-<!--
-**AndersonCabello/AndersonCabello** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
-
-Here are some ideas to get you started:
-
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+function myFunction() {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    var C = "";
+    var detail = [];
+    var datosAEnviar = [];
+  
+    ss.getRange("A2:D4").getValues().forEach(v => {
+      header = v[0]
+    })
+  
+    ss.getRange("A2:D4").getValues().forEach(v => {
+      if (v[0] == header) {
+        const data = {
+          pariente: v[1],
+          nombreM: v[2],
+          correo: v[3]
+        }
+        detail.push(data);
+      }
+    })
+  
+    const data = {
+      nombreA: header,
+      detalle: detail
+    }
+  
+    datosAEnviar.push(data);
+  
+    datosAEnviar.forEach(v => {
+      v.detalle.forEach(i => {
+  
+        const idCopy = copySlide();
+        const getSlide = SlidesApp.openById(idCopy);
+  
+        getSlide.getSlides().forEach(v => {
+          v.getShapes().forEach(f => {
+            f.getText().replaceAllText('{{nombreMama}}', i.nombreM)
+          })
+        })
+        getSlide.saveAndClose();
+  
+  
+  
+  
+        /*MailApp.sendEmail(
+          i.correo,
+          "TPS report status",
+          `El correo te lo envia tu ${i.pariente} ${v.nombreA} para ti ${i.nombreM}`);*/
+      })
+    })
+  
+  }
+  
+  
+  function copySlide() {
+    const saveCopy = DriveApp.getFileById('1Z2d82OVLJdfGn7h0YifaNHjRGV2O37JOsMe5B8UXjjA').makeCopy('Copia Carta DDM', DriveApp.getFolderById('1Bm81vsP--sMVyipqlAXtmQIsiFnecibb'));
+    return saveCopy.getId();
+  }
